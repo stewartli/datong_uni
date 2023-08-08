@@ -14,9 +14,13 @@ execute:
   message: false
 format: 
   revealjs:
+    header-includes: |
+      <link href="style.css" rel="stylesheet">
     logo: asset/logo_original.png
-    footer: "Footer text"
+    footer: "https://github.com/stewartli/datong_uni"
     theme: [league, style.css]
+    smaller: true
+    code-annotations: hover
     progress: true
     chalkboard: true
     multiplex: true
@@ -24,8 +28,6 @@ format:
     background-transition: fade
     touch: false
     controls: true
-    smaller: true
-    code-annotations: hover
 ---
 
 
@@ -38,9 +40,6 @@ library(tidyverse)
 library(lubridate)
 library(gt)
 library(reticulate)
-# library(validate)
-# library(shiny)
-# library(showtext)
 ```
 
 

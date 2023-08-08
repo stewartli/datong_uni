@@ -389,12 +389,13 @@
       margin-right: 0; 
     }
   </style>
+  <link href="style.css" rel="stylesheet">
 </head>
 <body class="quarto-dark">
   <div class="reveal">
     <div class="slides">
 
-<section id="title-slide" data-background-image="asset/truck.png" data-background-opacity="0.5" data-background-size="contain" class="quarto-title-block center">
+<section id="title-slide" data-background-image="asset/truck.jpg" data-background-opacity="0.5" data-background-size="contain" class="quarto-title-block center">
   <h1 class="title">Audit Data Analytics</h1>
   <p class="subtitle">Easy Fast Powerful</p>
 
@@ -496,10 +497,12 @@ Stewart Li
 <div class="column" style="width:40%;">
 <p>Excel can handle 1,048,576 rows and 16,384 columns at a time.</p>
 </div><div class="column" style="width:60%;">
+<div class="sourceCode" id="cb8"><pre class="sourceCode numberSource {{r}} number-lines code-with-copy"><code class="sourceCode"><span id="cb8-1"><a href="#cb8-1"></a>skimr::skim(df_r)</span>
+<span id="cb8-2"><a href="#cb8-2"></a>table1::table1(~sale_price + discounts | segment, data = df_r)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb8" data-code-line-numbers="3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a>df_r <span class="sc">%&gt;%</span> </span>
-<span id="cb8-2"><a href="#cb8-2"></a>  <span class="fu">group_by</span>(<span class="at">units_sold_cut =</span> <span class="fu">cut</span>(units_sold, <span class="dv">3</span>)) <span class="sc">%&gt;%</span> </span>
-<span id="cb8-3"><a href="#cb8-3"></a>  <span class="fu">summarise</span>(<span class="fu">across</span>(<span class="fu">where</span>(is.numeric), tibble<span class="sc">::</span><span class="fu">lst</span>(min, max, mean)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb9" data-code-line-numbers="3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a>df_r <span class="sc">%&gt;%</span> </span>
+<span id="cb9-2"><a href="#cb9-2"></a>  <span class="fu">group_by</span>(<span class="at">units_sold_cut =</span> <span class="fu">cut</span>(units_sold, <span class="dv">3</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb9-3"><a href="#cb9-3"></a>  <span class="fu">summarise</span>(<span class="fu">across</span>(<span class="fu">where</span>(is.numeric), tibble<span class="sc">::</span><span class="fu">lst</span>(min, max, mean)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 3 x 25
   units_sold_cut      units_sold_min units_sold_max units_sold_mean
@@ -530,7 +533,7 @@ Stewart Li
 <div class="tab-content">
 <div id="tabset-1-1">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a><span class="fu">colnames</span>(df_r)[<span class="fu">grep</span>(<span class="st">"^p"</span>, <span class="fu">colnames</span>(df_r))]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a><span class="fu">colnames</span>(df_r)[<span class="fu">grep</span>(<span class="st">"^p"</span>, <span class="fu">colnames</span>(df_r))]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "product" "profit" </code></pre>
 </div>
@@ -538,7 +541,7 @@ Stewart Li
 </div>
 <div id="tabset-1-2">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1"></a><span class="bu">print</span>([c <span class="cf">for</span> c <span class="kw">in</span> df_py.columns.to_list() <span class="cf">if</span> c.startswith(<span class="st">'p'</span>)])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1"></a><span class="bu">print</span>([c <span class="cf">for</span> c <span class="kw">in</span> df_py.columns.to_list() <span class="cf">if</span> c.startswith(<span class="st">'p'</span>)])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>['product', 'profit']</code></pre>
 </div>
@@ -629,10 +632,10 @@ Stewart Li
 <section id="cross-check" class="slide level2">
 <h2>Cross-check</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1"></a>df_r <span class="sc">%&gt;%</span> </span>
-<span id="cb14-2"><a href="#cb14-2"></a>  <span class="fu">mutate</span>(<span class="at">check_gross_sales =</span> units_sold <span class="sc">*</span> sale_price <span class="sc">-</span> gross_sales, </span>
-<span id="cb14-3"><a href="#cb14-3"></a>         <span class="at">check_profit =</span> <span class="fu">round</span>(units_sold <span class="sc">*</span> sale_price <span class="sc">-</span> discounts <span class="sc">-</span> cogs <span class="sc">-</span> profit, <span class="dv">2</span>)) <span class="sc">%&gt;%</span> </span>
-<span id="cb14-4"><a href="#cb14-4"></a>  <span class="fu">summarise</span>(<span class="fu">across</span>(<span class="fu">c</span>(check_gross_sales, check_profit), sum))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1"></a>df_r <span class="sc">%&gt;%</span> </span>
+<span id="cb15-2"><a href="#cb15-2"></a>  <span class="fu">mutate</span>(<span class="at">check_gross_sales =</span> units_sold <span class="sc">*</span> sale_price <span class="sc">-</span> gross_sales, </span>
+<span id="cb15-3"><a href="#cb15-3"></a>         <span class="at">check_profit =</span> <span class="fu">round</span>(units_sold <span class="sc">*</span> sale_price <span class="sc">-</span> discounts <span class="sc">-</span> cogs <span class="sc">-</span> profit, <span class="dv">2</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb15-4"><a href="#cb15-4"></a>  <span class="fu">summarise</span>(<span class="fu">across</span>(<span class="fu">c</span>(check_gross_sales, check_profit), sum))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 1 x 2
   check_gross_sales check_profit
@@ -644,9 +647,9 @@ Stewart Li
 <section id="eda" class="slide level2">
 <h2>EDA</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1"></a>df_r <span class="sc">%&gt;%</span> </span>
-<span id="cb16-2"><a href="#cb16-2"></a>  <span class="fu">group_by</span>(<span class="fu">week</span>(date)) <span class="sc">%&gt;%</span> </span>
-<span id="cb16-3"><a href="#cb16-3"></a>  <span class="fu">summarise</span>(<span class="fu">across</span>(<span class="fu">where</span>(is.numeric), tibble<span class="sc">::</span><span class="fu">lst</span>(min, max, mean))) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1"></a>df_r <span class="sc">%&gt;%</span> </span>
+<span id="cb17-2"><a href="#cb17-2"></a>  <span class="fu">group_by</span>(<span class="fu">week</span>(date)) <span class="sc">%&gt;%</span> </span>
+<span id="cb17-3"><a href="#cb17-3"></a>  <span class="fu">summarise</span>(<span class="fu">across</span>(<span class="fu">where</span>(is.numeric), tibble<span class="sc">::</span><span class="fu">lst</span>(min, max, mean))) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 12 x 25
    `week(date)` units_sold_min units_sold_max units_sold_mean
@@ -698,31 +701,31 @@ Stewart Li
 <section id="report" class="slide level2">
 <h2>Report</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1"></a>myskimr <span class="ot">&lt;-</span> skimr<span class="sc">::</span><span class="fu">skim_with</span>(<span class="at">numeric =</span> skimr<span class="sc">::</span><span class="fu">sfl</span>(<span class="at">p25 =</span> <span class="cn">NULL</span>, <span class="at">p50 =</span> <span class="cn">NULL</span>, <span class="at">p75 =</span> <span class="cn">NULL</span>))</span>
-<span id="cb18-2"><a href="#cb18-2"></a><span class="fu">myskimr</span>(<span class="fu">select</span>(df_r, <span class="fu">where</span>(is.numeric) <span class="sc">&amp;</span> dplyr<span class="sc">::</span><span class="fu">matches</span>(<span class="st">"sale|^c"</span>))) <span class="sc">%&gt;%</span> </span>
-<span id="cb18-3"><a href="#cb18-3"></a>  <span class="fu">select</span>(<span class="sc">-</span>skim_type) <span class="sc">%&gt;%</span> </span>
-<span id="cb18-4"><a href="#cb18-4"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">where</span>(is.numeric), formattable<span class="sc">::</span>comma, <span class="at">digits =</span> <span class="dv">0</span>)) <span class="sc">%&gt;%</span> </span>
-<span id="cb18-5"><a href="#cb18-5"></a>  <span class="fu">gt</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb18-6"><a href="#cb18-6"></a>  <span class="fu">opt_stylize</span>(<span class="at">style =</span> <span class="dv">6</span>, <span class="at">color =</span> <span class="st">"blue"</span>, <span class="at">add_row_striping =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1"></a>myskimr <span class="ot">&lt;-</span> skimr<span class="sc">::</span><span class="fu">skim_with</span>(<span class="at">numeric =</span> skimr<span class="sc">::</span><span class="fu">sfl</span>(<span class="at">p25 =</span> <span class="cn">NULL</span>, <span class="at">p50 =</span> <span class="cn">NULL</span>, <span class="at">p75 =</span> <span class="cn">NULL</span>))</span>
+<span id="cb19-2"><a href="#cb19-2"></a><span class="fu">myskimr</span>(<span class="fu">select</span>(df_r, <span class="fu">where</span>(is.numeric) <span class="sc">&amp;</span> dplyr<span class="sc">::</span><span class="fu">matches</span>(<span class="st">"sale|^c"</span>))) <span class="sc">%&gt;%</span> </span>
+<span id="cb19-3"><a href="#cb19-3"></a>  <span class="fu">select</span>(<span class="sc">-</span>skim_type) <span class="sc">%&gt;%</span> </span>
+<span id="cb19-4"><a href="#cb19-4"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">where</span>(is.numeric), formattable<span class="sc">::</span>comma, <span class="at">digits =</span> <span class="dv">0</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb19-5"><a href="#cb19-5"></a>  <span class="fu">gt</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb19-6"><a href="#cb19-6"></a>  <span class="fu">opt_stylize</span>(<span class="at">style =</span> <span class="dv">6</span>, <span class="at">color =</span> <span class="st">"blue"</span>, <span class="at">add_row_striping =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 
-<div id="jogkmtixva" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#jogkmtixva table {
+<div id="loaxmwdoqn" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#loaxmwdoqn table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#jogkmtixva thead, #jogkmtixva tbody, #jogkmtixva tfoot, #jogkmtixva tr, #jogkmtixva td, #jogkmtixva th {
+#loaxmwdoqn thead, #loaxmwdoqn tbody, #loaxmwdoqn tfoot, #loaxmwdoqn tr, #loaxmwdoqn td, #loaxmwdoqn th {
   border-style: none;
 }
 
-#jogkmtixva p {
+#loaxmwdoqn p {
   margin: 0;
   padding: 0;
 }
 
-#jogkmtixva .gt_table {
+#loaxmwdoqn .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -748,12 +751,12 @@ Stewart Li
   border-left-color: #D3D3D3;
 }
 
-#jogkmtixva .gt_caption {
+#loaxmwdoqn .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#jogkmtixva .gt_title {
+#loaxmwdoqn .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -765,7 +768,7 @@ Stewart Li
   border-bottom-width: 0;
 }
 
-#jogkmtixva .gt_subtitle {
+#loaxmwdoqn .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -777,7 +780,7 @@ Stewart Li
   border-top-width: 0;
 }
 
-#jogkmtixva .gt_heading {
+#loaxmwdoqn .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -789,13 +792,13 @@ Stewart Li
   border-right-color: #D3D3D3;
 }
 
-#jogkmtixva .gt_bottom_border {
+#loaxmwdoqn .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #5F5F5F;
 }
 
-#jogkmtixva .gt_col_headings {
+#loaxmwdoqn .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #5F5F5F;
@@ -810,7 +813,7 @@ Stewart Li
   border-right-color: #D3D3D3;
 }
 
-#jogkmtixva .gt_col_heading {
+#loaxmwdoqn .gt_col_heading {
   color: #FFFFFF;
   background-color: #0076BA;
   font-size: 100%;
@@ -830,7 +833,7 @@ Stewart Li
   overflow-x: hidden;
 }
 
-#jogkmtixva .gt_column_spanner_outer {
+#loaxmwdoqn .gt_column_spanner_outer {
   color: #FFFFFF;
   background-color: #0076BA;
   font-size: 100%;
@@ -842,15 +845,15 @@ Stewart Li
   padding-right: 4px;
 }
 
-#jogkmtixva .gt_column_spanner_outer:first-child {
+#loaxmwdoqn .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#jogkmtixva .gt_column_spanner_outer:last-child {
+#loaxmwdoqn .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#jogkmtixva .gt_column_spanner {
+#loaxmwdoqn .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #5F5F5F;
@@ -862,11 +865,11 @@ Stewart Li
   width: 100%;
 }
 
-#jogkmtixva .gt_spanner_row {
+#loaxmwdoqn .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#jogkmtixva .gt_group_heading {
+#loaxmwdoqn .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -892,7 +895,7 @@ Stewart Li
   text-align: left;
 }
 
-#jogkmtixva .gt_empty_group_heading {
+#loaxmwdoqn .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -907,15 +910,15 @@ Stewart Li
   vertical-align: middle;
 }
 
-#jogkmtixva .gt_from_md > :first-child {
+#loaxmwdoqn .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#jogkmtixva .gt_from_md > :last-child {
+#loaxmwdoqn .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#jogkmtixva .gt_row {
+#loaxmwdoqn .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -934,7 +937,7 @@ Stewart Li
   overflow-x: hidden;
 }
 
-#jogkmtixva .gt_stub {
+#loaxmwdoqn .gt_stub {
   color: #333333;
   background-color: #89D3FE;
   font-size: 100%;
@@ -947,7 +950,7 @@ Stewart Li
   padding-right: 5px;
 }
 
-#jogkmtixva .gt_stub_row_group {
+#loaxmwdoqn .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -961,15 +964,15 @@ Stewart Li
   vertical-align: top;
 }
 
-#jogkmtixva .gt_row_group_first td {
+#loaxmwdoqn .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#jogkmtixva .gt_row_group_first th {
+#loaxmwdoqn .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#jogkmtixva .gt_summary_row {
+#loaxmwdoqn .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -979,16 +982,16 @@ Stewart Li
   padding-right: 5px;
 }
 
-#jogkmtixva .gt_first_summary_row {
+#loaxmwdoqn .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #5F5F5F;
 }
 
-#jogkmtixva .gt_first_summary_row.thick {
+#loaxmwdoqn .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#jogkmtixva .gt_last_summary_row {
+#loaxmwdoqn .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -998,7 +1001,7 @@ Stewart Li
   border-bottom-color: #5F5F5F;
 }
 
-#jogkmtixva .gt_grand_summary_row {
+#loaxmwdoqn .gt_grand_summary_row {
   color: #333333;
   background-color: #D5D5D5;
   text-transform: inherit;
@@ -1008,7 +1011,7 @@ Stewart Li
   padding-right: 5px;
 }
 
-#jogkmtixva .gt_first_grand_summary_row {
+#loaxmwdoqn .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1018,7 +1021,7 @@ Stewart Li
   border-top-color: #5F5F5F;
 }
 
-#jogkmtixva .gt_last_grand_summary_row_top {
+#loaxmwdoqn .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1028,11 +1031,11 @@ Stewart Li
   border-bottom-color: #5F5F5F;
 }
 
-#jogkmtixva .gt_striped {
+#loaxmwdoqn .gt_striped {
   background-color: #EDF7FC;
 }
 
-#jogkmtixva .gt_table_body {
+#loaxmwdoqn .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #5F5F5F;
@@ -1041,7 +1044,7 @@ Stewart Li
   border-bottom-color: #5F5F5F;
 }
 
-#jogkmtixva .gt_footnotes {
+#loaxmwdoqn .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1055,7 +1058,7 @@ Stewart Li
   border-right-color: #D3D3D3;
 }
 
-#jogkmtixva .gt_footnote {
+#loaxmwdoqn .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -1064,7 +1067,7 @@ Stewart Li
   padding-right: 5px;
 }
 
-#jogkmtixva .gt_sourcenotes {
+#loaxmwdoqn .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1078,7 +1081,7 @@ Stewart Li
   border-right-color: #D3D3D3;
 }
 
-#jogkmtixva .gt_sourcenote {
+#loaxmwdoqn .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -1086,63 +1089,63 @@ Stewart Li
   padding-right: 5px;
 }
 
-#jogkmtixva .gt_left {
+#loaxmwdoqn .gt_left {
   text-align: left;
 }
 
-#jogkmtixva .gt_center {
+#loaxmwdoqn .gt_center {
   text-align: center;
 }
 
-#jogkmtixva .gt_right {
+#loaxmwdoqn .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#jogkmtixva .gt_font_normal {
+#loaxmwdoqn .gt_font_normal {
   font-weight: normal;
 }
 
-#jogkmtixva .gt_font_bold {
+#loaxmwdoqn .gt_font_bold {
   font-weight: bold;
 }
 
-#jogkmtixva .gt_font_italic {
+#loaxmwdoqn .gt_font_italic {
   font-style: italic;
 }
 
-#jogkmtixva .gt_super {
+#loaxmwdoqn .gt_super {
   font-size: 65%;
 }
 
-#jogkmtixva .gt_footnote_marks {
+#loaxmwdoqn .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#jogkmtixva .gt_asterisk {
+#loaxmwdoqn .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#jogkmtixva .gt_indent_1 {
+#loaxmwdoqn .gt_indent_1 {
   text-indent: 5px;
 }
 
-#jogkmtixva .gt_indent_2 {
+#loaxmwdoqn .gt_indent_2 {
   text-indent: 10px;
 }
 
-#jogkmtixva .gt_indent_3 {
+#loaxmwdoqn .gt_indent_3 {
   text-indent: 15px;
 }
 
-#jogkmtixva .gt_indent_4 {
+#loaxmwdoqn .gt_indent_4 {
   text-indent: 20px;
 }
 
-#jogkmtixva .gt_indent_5 {
+#loaxmwdoqn .gt_indent_5 {
   text-indent: 25px;
 }
 </style>
@@ -1205,7 +1208,7 @@ Stewart Li
 <h2>Contact me <a href="2905296699"><i class="fa-solid fa-book" aria-label="book"></i></a> <a href="https://github.com/stewartli"><i class="fa-brands fa-github" aria-label="github"></i></a> <a href="https://twitter.com/stewartli3"><i class="fa-brands fa-twitter" aria-label="twitter"></i></a> <a href="https://www.linkedin.com/in/stewart-li-30a11563/"><i class="fa-brands fa-linkedin-in" aria-label="linkedin-in"></i></a> <a href="https://www.youtube.com/channel/UCtnEyNiMdWnKhMdy5XwELLA"><i class="fa-brands fa-youtube" aria-label="youtube"></i></a></h2>
 
 <img src="asset/logo_original.png" class="slide-logo r-stretch"><div class="footer footer-default">
-<p>Footer text</p>
+<p>https://github.com/stewartli/datong_uni</p>
 </div>
 </section>
     </div>
