@@ -1,0 +1,319 @@
+---
+title: "Audit Data Analytics"
+subtitle: "Easy Fast Powerful"
+title-slide-attributes:
+    data-background-image: asset/truck.jpg
+    data-background-size: contain
+    data-background-opacity: "0.5"
+author: "Stewart Li"
+date: today
+execute: 
+  echo: true
+  warning: false
+  error: false
+  message: false
+format: 
+  revealjs:
+    logo: asset/logo_original.png
+    footer: "Footer text"
+    theme: [league, style.css]
+    progress: true
+    chalkboard: true
+    multiplex: true
+    transition: slide
+    background-transition: fade
+    touch: false
+    controls: true
+    smaller: true
+    code-annotations: hover
+---
+
+
+```{r}
+#| echo: false
+#| include: false
+options(scipen = 999)
+
+library(tidyverse)
+library(lubridate)
+library(gt)
+library(reticulate)
+# library(validate)
+# library(shiny)
+# library(showtext)
+```
+
+
+```{python}
+#| echo: false
+#| warning: false
+#| error: false
+#| message: false
+#| include: false
+import pandas as pd
+```
+
+
+## Why should you care? {background-video="asset/bay.mp4" background-video-loop="true" background-video-muted="true"}
+
+
+## [Data](https://learn.microsoft.com/en-us/power-bi/create-reports/sample-financial-download#get-the-sample-in-power-bi-desktop)
+
+
+```{r}
+df_r <- readxl::read_excel(here::here('raw/Financial Sample.xlsx')) %>% 
+  janitor::clean_names() %>% 
+  select(-c(month_number:last_col()))
+head(df_r[, 1:5], 2)
+```
+
+
+```{python}
+df_py = r.df_r
+df_py.head(2)
+```
+
+
+```{{r}}
+conn <- DBI::dbConnect(duckdb::duckdb(), 'finsample.duckdb')
+DBI::dbWriteTable(conn, "finsample", df_r)
+DBI::dbListTables(conn)  
+DBI::dbGetQuery(conn, "SELECT * FROM finsample LIMIT 3;")  
+DBI::dbDisconnect(conn)
+```
+
+
+```{{bash}}
+cp finsample.duckdb /c/Users/"Stewart Li"/Desktop/
+mv /mnt/c/Users/Stewart\ Li/Desktop/finsample.duckdb .
+
+./duckdb
+.open finsample.duckdb
+.tables
+from finsample limit 3;
+```
+
+
+## Easy
+
+
+:::: {.columns}
+
+::: {.column width="40%"} 
+
+![](asset/messy_excel.jpg)
+
+:::
+
+::: {.column width="60%"}
+
+
+```{r}
+df_r %>% 
+  group_by(discount_band) %>% 
+  count(country, segment, product) %>% 
+  mutate(pct = n / sum(n)) # <1>
+```
+
+1. less typing and clicking
+
+
+:::
+
+::::
+
+
+## Fast
+
+
+:::: {.columns}
+::: {.column width="40%"}
+
+
+Excel can handle 1,048,576 rows and 16,384 columns at a time. 
+
+:::
+::: {.column width="60%"}
+
+
+```{{r}}
+skimr::skim(df_r)
+table1::table1(~sale_price + discounts | segment, data = df_r)
+```
+
+
+```{r}
+#| code-line-numbers: "3"
+df_r %>% 
+  group_by(units_sold_cut = cut(units_sold, 3)) %>% 
+  summarise(across(where(is.numeric), tibble::lst(min, max, mean)))
+```
+
+:::
+::::
+
+
+## Powerful
+
+
+:::: {.columns}
+::: {.column width="40%"}
+
+
+You need learn VBA, M, .Net, and C# to extend Excel.  
+
+:::
+::: {.column width="60%"}
+
+
+::: {.panel-tabset}
+
+
+### R
+
+
+```{r}
+#| echo: true
+colnames(df_r)[grep("^p", colnames(df_r))]
+```
+
+
+### Python
+
+```{python}
+#| echo: true
+print([c for c in df_py.columns.to_list() if c.startswith('p')])
+```
+
+
+### SQL
+
+![](asset/duckdb.png)
+
+
+:::
+:::
+::::
+
+
+::: {.notes}
+- Easy: excel formula (ACL/IDEA/Teammate). avoid fat finger error. maintain (click vs text). 
+- Fast: run, operational action (click).
+- Powerful: general data tools. extending excel is not beneficial. 
+:::
+
+
+## {auto-animate=true}
+
+
+::: {style="margin-top: 100px;"}
+
+
+Audit workflow
+
+:::
+
+
+## {auto-animate=true}
+
+
+::: {style="margin-top: 200px; font-size: 3em; color: red;"}
+
+
+Audit workflow
+
+:::
+
+
+::: {.notes}
+- How does it fit into an audit workflow?
+:::
+
+
+## Audit workflow
+
+
+![](asset/tidypic.png)
+
+
+::: {.incremental}
+- Cross-check: re-calculation of data.
+- EDA: overview of data set. 
+- Test: analytical procedures.
+- Report: tables, etc. 
+
+:::
+
+
+::: {.notes}
+- Tally sum of credit/debit balance.
+- JV/sale invoice number is sequential. internal control assessment (date). 
+- Trend analysis, reconciliation, sampling data for substantive test.
+- Copy/paste number into word template. 
+
+:::
+
+
+## Cross-check  
+
+
+```{r}
+df_r %>% 
+  mutate(check_gross_sales = units_sold * sale_price - gross_sales, 
+         check_profit = round(units_sold * sale_price - discounts - cogs - profit, 2)) %>% 
+  summarise(across(c(check_gross_sales, check_profit), sum))
+```
+
+
+
+## EDA
+
+
+```{r}
+df_r %>% 
+  group_by(week(date)) %>% 
+  summarise(across(where(is.numeric), tibble::lst(min, max, mean))) 
+```
+
+
+## Trend  
+
+
+```{r}
+df_r %>% 
+  ggplot(aes(profit, cogs, color = segment)) + 
+  geom_point() + geom_smooth() +    # <1>
+  ggthemes::theme_fivethirtyeight() # <2>
+```
+
+1. specify the model
+2. community contributed themes
+
+
+## Report  
+
+
+```{r}
+myskimr <- skimr::skim_with(numeric = skimr::sfl(p25 = NULL, p50 = NULL, p75 = NULL))
+myskimr(select(df_r, where(is.numeric) & dplyr::matches("sale|^c"))) %>% 
+  select(-skim_type) %>% 
+  mutate(across(where(is.numeric), formattable::comma, digits = 0)) %>% 
+  gt() %>%
+  opt_stylize(style = 6, color = "blue", add_row_striping = TRUE)
+```
+
+
+## Contact me [{{< fa book >}}](2905296699) [{{< fa brands github >}}](https://github.com/stewartli) [{{< fa brands twitter >}}](https://twitter.com/stewartli3) [{{< fa brands linkedin-in >}}](https://www.linkedin.com/in/stewart-li-30a11563/) [{{< fa brands youtube >}}](https://www.youtube.com/channel/UCtnEyNiMdWnKhMdy5XwELLA) {.center}
+
+
+
+
+
+
+
+
+
+
+
+
+

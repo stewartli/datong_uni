@@ -1,0 +1,32 @@
+---
+title: "WebR"
+format: html
+engine: knitr
+filters:
+  - webr
+webr:
+  packages: ['ggplot2', 'dplyr']  
+---
+
+
+You can directly write codes in the html document thanks to R WebAssembly. 
+
+
+```{webr-r}
+mtcars[sample(3), 1:3]
+```
+
+
+```{webr-r}
+suppressMessages(library(dplyr))
+library(ggplot2)
+
+ggplot(mtcars, aes(disp, hp)) + 
+  geom_point(aes(color = factor(am)), show.legend = FALSE) 
+```
+
+
+
+
+
+
